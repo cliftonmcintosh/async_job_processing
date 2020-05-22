@@ -7,11 +7,6 @@ defmodule SpreedlyAsync.Application do
 
   def start(_type, _args) do
     children = [
-      # Start the Telemetry supervisor
-      SpreedlyAsyncWeb.Telemetry,
-      # Start the PubSub system
-      {Phoenix.PubSub, name: SpreedlyAsync.PubSub},
-      # Start the Endpoint (http/https)
       SpreedlyAsyncWeb.Endpoint,
       {Registry, name: SpreedlyAsync.Registry, keys: :unique},
       {DynamicSupervisor, name: SpreedlyAsync.ResponseHandlerSupervisor, strategy: :one_for_one}
