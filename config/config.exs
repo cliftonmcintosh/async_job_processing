@@ -18,6 +18,7 @@ config :spreedly_async, SpreedlyAsyncWeb.Endpoint,
 config :spreedly_async,
   http_adapter: HTTPoison,
   server_endpoint: "http://jobs.asgateway.com/start",
+  callback_url: System.get_env("CALLBACK_URL"),
   response_handler: SpreedlyAsync.ResponseHandler,
   response_timeout: 5_000
 

@@ -7,7 +7,9 @@ config :spreedly_async, SpreedlyAsyncWeb.Endpoint,
   server: false
 
 config :spreedly_async,
+  http_adapter: HTTPMock,
   server_endpoint: "unused",
+  response_handler: ResponseHandlerMock,
   response_timeout: 1000
 
 # Print only warnings and errors during test
