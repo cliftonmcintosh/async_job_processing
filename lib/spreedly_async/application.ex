@@ -12,9 +12,9 @@ defmodule SpreedlyAsync.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: SpreedlyAsync.PubSub},
       # Start the Endpoint (http/https)
-      SpreedlyAsyncWeb.Endpoint
-      # Start a worker by calling: SpreedlyAsync.Worker.start_link(arg)
-      # {SpreedlyAsync.Worker, arg}
+      SpreedlyAsyncWeb.Endpoint,
+      {Registry, name: SpreedlyAsync.Registry, keys: :unique},
+      {DynamicSupervisor, name: SpreedlyAsync.ResponseHandlerSupervisor, strategy: :one_for_one}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -15,6 +15,12 @@ config :spreedly_async, SpreedlyAsyncWeb.Endpoint,
   pubsub_server: SpreedlyAsync.PubSub,
   live_view: [signing_salt: "6kOwwkjv"]
 
+config :spreedly_async,
+  http_adapter: HTTPoison,
+  server_endpoint: "http://jobs.asgateway.com/start",
+  response_handler: SpreedlyAsync.ResponseHandler,
+  response_timeout: 5_000
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
