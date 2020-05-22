@@ -33,6 +33,8 @@ defmodule SpreedlyAsync.MixProject do
   # Type `mix help deps` for examples and options.s gst
   defp deps do
     [
+      {:httpoison, "~> 1.6"},
+      {:mox, "~> 0.5.2"},
       {:phoenix, "~> 1.5.1"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
