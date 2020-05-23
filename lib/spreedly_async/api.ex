@@ -31,6 +31,7 @@ defmodule SpreedlyAsync.Api do
     with {:ok, %{body: body}} <- http_adapter().post(@server_url, body, @headers),
          {:ok, decoded} <- Jason.decode(body),
          {:ok, %{"id" => _request_id} = response} <- response_handler().provide_response(decoded) do
+      response_handler().terminate_handler(decoded)
       response
     else
       error ->

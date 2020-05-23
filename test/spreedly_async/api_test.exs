@@ -12,11 +12,12 @@ defmodule SpreedlyAsync.ApiTest do
     test "it returns the response from the handler" do
       request = %{"account" => "me@example.com"}
 
-      message_body =
-        Jason.encode!(%{
-          "state" => "running",
-          "id" => "4499a6e0c2ef4b98"
-        })
+      running_response = %{
+        "state" => "running",
+        "id" => "4499a6e0c2ef4b98"
+      }
+
+      message_body = Jason.encode!(running_response)
 
       completed_response = %{
         "id" => "4499a6e0c2ef4b98",
@@ -34,8 +35,13 @@ defmodule SpreedlyAsync.ApiTest do
         {:ok, %{body: message_body}}
       end)
 
-      expect(ResponseHandlerMock, :provide_response, fn _async_message ->
+      ResponseHandlerMock
+      |> expect(:provide_response, fn _async_message ->
         {:ok, completed_response}
+      end)
+      |> expect(:terminate_handler, fn request ->
+        assert request == running_response
+        :ok
       end)
 
       result = Api.submit_request(request)
