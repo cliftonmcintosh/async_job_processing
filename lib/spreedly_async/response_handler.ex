@@ -44,6 +44,18 @@ defmodule SpreedlyAsync.ResponseHandler do
     end
   end
 
+  @impl SpreedlyAsync.Behaviours.ResponseHandler
+  def terminate_handler(%{"id" => request_id}) do
+    case Registry.lookup(@registry, request_id) do
+      [{pid, _}] ->
+        GenServer.stop(pid, :normal)
+
+      [] ->
+        Logger.info("No handler found for #{request_id}")
+        :ok
+    end
+  end
+
   @spec child_spec(tuple()) :: map()
   def child_spec({_caller, request_id} = args) do
     %{

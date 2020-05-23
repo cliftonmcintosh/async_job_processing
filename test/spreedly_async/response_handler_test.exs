@@ -6,10 +6,11 @@ defmodule SpreedlyAsync.ResponseHandlerTest do
 
   @moduletag capture_log: true
 
+  @registry SpreedlyAsync.Registry
   @timeout Application.get_env(:spreedly_async, :response_timeout, 5_000)
 
   setup context do
-    id = Map.get(context, :id)
+    id = Map.get(context, :id, "")
     request = %{"id" => id}
 
     response = %{
@@ -67,6 +68,40 @@ defmodule SpreedlyAsync.ResponseHandlerTest do
       response: response
     } do
       assert {:error, :not_found} = ResponseHandler.receive_response(response)
+    end
+  end
+
+  describe "terminate_handler/1" do
+    @tag id: "939ecd924adcd239"
+    test "terminates the handler", %{request: %{"id" => request_id} = request} do
+      ResponseHandler.provide_response(request)
+      :timer.sleep(10)
+
+      assert [{_handler_pid, _value}] = Registry.lookup(@registry, request_id)
+
+      task =
+        Task.async(fn ->
+          ResponseHandler.terminate_handler(request)
+        end)
+
+      :timer.sleep(10)
+
+      assert :ok = Task.await(task, @timeout + 50)
+      assert [] = Registry.lookup(@registry, request_id)
+    end
+
+    @tag id: "d6bcb273ea7fe50"
+    test "returns :ok if no handler found", %{request: %{"id" => request_id} = request} do
+      assert [] = Registry.lookup(@registry, request_id)
+
+      task =
+        Task.async(fn ->
+          ResponseHandler.terminate_handler(request)
+        end)
+
+      :timer.sleep(10)
+
+      assert :ok = Task.await(task, @timeout + 50)
     end
   end
 end
