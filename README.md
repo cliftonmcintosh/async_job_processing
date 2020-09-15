@@ -2,7 +2,7 @@
 
 A coding challenge solution.
 
-## Problem
+# Problem
 
 We've deployed a server that you can start jobs on. What do the jobs do? Doesn't really matter. What is important is that the jobs will always take ~0.5 seconds to complete. You can queue up a job like this:
 
